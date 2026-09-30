@@ -3,12 +3,12 @@ import type { WeatherData } from '../types/weather';
 export const mockWeatherData: WeatherData = {
   city: {
     id: 3448439,
-    name: 'Sao Paulo',
+    name: 'São Paulo',
     latitude: -23.5475,
     longitude: -46.63611,
-    country: 'Brazil',
+    country: 'Brasil',
     countryCode: 'BR',
-    region: 'Sao Paulo',
+    region: 'São Paulo',
     timeZone: 'America/Sao_Paulo',
   },
   current: {

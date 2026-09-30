@@ -2,6 +2,51 @@
 
 As tarefas estão ordenadas por dependência dentro das entregas; os IDs são mantidos como referências estáveis e não definem a ordem de execução. Q1–Q9 e Q12 da spec devem ser decididas ou aceitas formalmente como restrições antes da baseline de aceite/produção. Cada tarefa mantém um escopo de arquivos pequeno e uma responsabilidade verificável.
 
+## Checklist de andamento
+
+`[x]` significa que todos os critérios de aceite da tarefa foram verificados; `[ ]` significa pendente. Notas de implementação parcial registram arquivos existentes, mas não contam como aceite concluído. No estado atual, nenhuma tarefa satisfaz integralmente todos os seus critérios.
+
+- [ ] **T-01** — Decisões de escopo/plataforma Q6, Q10 e Q11 pendentes.
+- [ ] **T-02** — Contrato de dados e condições Open-Meteo Q1–Q5/Q12 pendentes.
+- [ ] **T-03** — Metas NFR e timeout Q7/Q8 pendentes.
+- [ ] **T-04** — Política de dados/privacidade Q9 pendente.
+- [ ] **T-05** — Não há `src/main.tsx` nem `src/App.tsx`.
+- [ ] **T-06 — Parcial:** `src/types/weather.ts` existe; contrato final depende de T-02/Q1–Q5.
+- [ ] **T-07** — `weatherMappers.ts` ainda não existe.
+- [ ] **T-08** — Mapeamento do payload Forecast ainda não existe.
+- [ ] **T-09 — Parcial:** `weatherCodes.ts` existe; conjunto aprovado depende de T-02/Q1.
+- [ ] **T-10 — Parcial:** `temperature.ts` existe; arredondamento depende de T-02/Q5.
+- [ ] **T-11** — Teste de mapeadores não existe.
+- [ ] **T-12** — Teste de códigos WMO não existe.
+- [ ] **T-13** — Teste unitário de conversão não existe.
+- [ ] **T-14** — Service de geocoding não existe.
+- [ ] **T-15** — Teste do service de geocoding não existe.
+- [ ] **T-16** — Service de forecast não existe.
+- [ ] **T-17** — Teste do service de forecast não existe.
+- [ ] **T-18** — Hook de busca não existe.
+- [ ] **T-19** — Hook meteorológico não existe.
+- [ ] **T-20** — Teste do hook de busca não existe.
+- [ ] **T-21** — Teste do hook meteorológico não existe.
+- [ ] **T-22 — Parcial:** `SearchBar.tsx` existe, mas resultados e seleção de cidade não estão implementados.
+- [ ] **T-23 — Parcial:** `CurrentWeather.tsx` existe; timestamp/AC5 e campos finais Q1/Q4 não estão fechados.
+- [ ] **T-24 — Parcial:** `ForecastCard.tsx` e `ForecastList.tsx` existem; Q2 ainda condiciona granularidade diária.
+- [ ] **T-25 — Parcial:** `UnitToggle.tsx` existe; estado inicial/integrado e arredondamento Q5 seguem pendentes.
+- [ ] **T-26** — `WeatherStatus.tsx` não existe.
+- [ ] **T-27** — `App.tsx` e integração da busca não existem.
+- [ ] **T-28** — Teste do componente de busca não existe.
+- [ ] **T-29** — Teste do componente de clima atual não existe.
+- [ ] **T-30** — Teste do componente de previsão não existe.
+- [ ] **T-31** — Teste do seletor de unidade não existe.
+- [ ] **T-32** — Teste de estados/retry não existe.
+- [ ] **T-33** — E2E do fluxo principal não existe.
+- [ ] **T-34** — E2E de vazio/erro/retry não existe.
+- [ ] **T-35** — E2E mobile não existe; viewport final depende de Q6.
+- [ ] **T-36** — Teste/auditoria de acessibilidade não existe; método depende de Q7.
+- [ ] **T-37** — Medição de desempenho não existe; protocolo depende de Q7.
+- [ ] **T-38** — Verificação operacional de disponibilidade não existe; hosting/meta dependem de Q6/Q7.
+- [ ] **T-39** — Integração de clima atual no App não existe.
+- [ ] **T-40** — Integração de previsão/unidade no App não existe.
+
 ## Entrega 1 — Decisões e contrato de produto
 
 ### T-01 — Fechar escopo do MVP e plataforma
