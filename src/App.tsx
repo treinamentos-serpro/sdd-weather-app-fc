@@ -6,55 +6,15 @@ import EmptyState from './components/states/EmptyState';
 import ErrorState from './components/states/ErrorState';
 import LoadingState from './components/states/LoadingState';
 import UnitToggle from './components/UnitToggle';
-import { mockWeatherData } from './mocks/weatherData';
-import type { Unit, WeatherData } from './types/weather';
-
-type WeatherViewState =
-  | { status: 'idle' }
-  | { status: 'loading'; query: string }
-  | { status: 'empty'; query: string }
-  | { status: 'error'; query: string; message: string }
-  | { status: 'success'; data: WeatherData };
-
-function normalizeCityName(city: string): string {
-  return city
-    .normalize('NFD')
-    .replace(/\p{Diacritic}/gu, '')
-    .trim()
-    .toLocaleLowerCase('pt-BR');
-}
+import { useWeather } from './hooks/useWeather';
+import type { Unit } from './types/weather';
 
 export default function App() {
   const [unit, setUnit] = useState<Unit>('celsius');
-  const [viewState, setViewState] = useState<WeatherViewState>({ status: 'idle' });
-
-  async function searchCity(city: string) {
-    setViewState({ status: 'loading', query: city });
-
-    try {
-      // Simula latência para que o estado de carregamento seja visível durante o desenvolvimento da UI.
-      await new Promise<void>((resolve) => window.setTimeout(resolve, 250));
-
-      const query = normalizeCityName(city);
-      const mockCity = normalizeCityName(mockWeatherData.city.name);
-
-      if (query !== mockCity) {
-        setViewState({ status: 'empty', query: city });
-        return;
-      }
-
-      setViewState({ status: 'success', data: mockWeatherData });
-    } catch {
-      setViewState({
-        status: 'error',
-        query: city,
-        message: 'Não foi possível carregar os dados do clima.',
-      });
-    }
-  }
+  const { status, data, cities, error, query, search, selectCity, retry } = useWeather();
 
   function renderContent() {
-    switch (viewState.status) {
+    switch (status) {
       case 'idle':
         return (
           <EmptyState
@@ -63,35 +23,42 @@ export default function App() {
           />
         );
       case 'loading':
-        return <LoadingState message={`Buscando o clima de ${viewState.query}…`} />;
+        return <LoadingState message={`Buscando o clima de ${query}…`} />;
       case 'empty':
         return (
           <EmptyState
-            hint="Confira a grafia ou tente buscar São Paulo, a cidade disponível neste mock."
-            title={`Nenhuma cidade encontrada para “${viewState.query}”`}
+            hint="Confira a grafia ou tente buscar outra cidade."
+            title={`Nenhuma cidade encontrada para “${query}”`}
           />
         );
       case 'error':
         return (
           <ErrorState
-            message={viewState.message}
-            onRetry={() => void searchCity(viewState.query)}
+            message={error ?? 'Não foi possível carregar os dados do clima.'}
+            onRetry={() => void retry()}
           />
         );
       case 'success':
+        if (data) {
+          return (
+            <div className="space-y-6">
+              <CurrentWeather city={data.city} current={data.current} unit={unit} />
+              <ForecastList forecast={data.forecast} timeZone={data.city.timeZone} unit={unit} />
+            </div>
+          );
+        }
+
+        if (cities.length > 0) {
+          return (
+            <EmptyState
+              hint="Selecione uma das cidades encontradas para consultar o clima."
+              title="Escolha uma cidade"
+            />
+          );
+        }
+
         return (
-          <div className="space-y-6">
-            <CurrentWeather
-              city={viewState.data.city}
-              current={viewState.data.current}
-              unit={unit}
-            />
-            <ForecastList
-              forecast={viewState.data.forecast}
-              timeZone={viewState.data.city.timeZone}
-              unit={unit}
-            />
-          </div>
+          <EmptyState hint="Faça uma nova busca para continuar." title="Selecione uma cidade" />
         );
     }
   }
@@ -108,19 +75,21 @@ export default function App() {
           </div>
 
           <div className="flex min-w-0 flex-col gap-3 sm:flex-row sm:items-end">
-            <SearchBar disabled={viewState.status === 'loading'} onSearch={searchCity} />
+            <SearchBar
+              cities={cities}
+              disabled={status === 'loading'}
+              onSearch={(city) => void search(city)}
+              onSelectCity={(city) => void selectCity(city)}
+            />
             <UnitToggle onChange={setUnit} unit={unit} />
           </div>
         </div>
       </header>
 
       <main
-        aria-busy={viewState.status === 'loading'}
+        aria-busy={status === 'loading'}
         className="mx-auto w-full max-w-6xl space-y-5 px-4 py-8 sm:px-6 sm:py-10"
       >
-        <p className="text-sm text-white/55" role="note">
-          Ambiente de demonstração com dados locais para São Paulo.
-        </p>
         {renderContent()}
       </main>
     </div>
